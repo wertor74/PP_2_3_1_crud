@@ -75,11 +75,10 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.29</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.0-api -->
     <dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.0-api</artifactId>
-      <version>1.0.1.Final</version>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
+      <version>2.2</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
     <dependency>
@@ -128,10 +127,20 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <warSourceDirectory>src/webapp</warSourceDirectory>
+          <warName>crud</warName>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>8</source>
-          <target>8</target>
+          <source>17</source>
+          <target>17</target>
         </configuration>
       </plugin>
     </plugins>

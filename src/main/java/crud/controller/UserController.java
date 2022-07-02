@@ -1,17 +1,10 @@
 package crud.controller;
 
-import crud.dao.UserDao;
 import crud.model.User;
 import crud.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.time.LocalDate;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -37,22 +30,19 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public String showUserFromId(@PathVariable("id") Long id, Model model) {
-        return null;
+        model.addAttribute("user", userService.getUserFromId(id));
+        return "user";
     }
 
     @GetMapping(value = "/add")
     public String addNewUser(@ModelAttribute("user") User user) {
-/*        User user1 = new User("Алексей", "Владимирович", "Цуцкарёв", LocalDate.of(1974, 10, 23));
-        userService.addUser(user1);*/
-        System.out.println("addNewUser = " + user);
         return "add";
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping("/add")
     public String createUser(@ModelAttribute("user") User user) {
-        System.out.println(user);
         userService.addUser(user);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
     @GetMapping(value = "/{id}/edit")
@@ -61,9 +51,15 @@ public class UserController {
         return "edit";
     }
 
-    @PostMapping(value = "/{id}")
+    @PatchMapping(value = "/{id}/edit")
     public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+        userService.updateUser(user, id);
+        return "redirect:/users";
+    }
 
+    @DeleteMapping(value = "/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        userService.removeUser(id);
         return "redirect:/users";
     }
 }

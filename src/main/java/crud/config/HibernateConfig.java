@@ -1,35 +1,21 @@
 package crud.config;
 
-import crud.model.User;
-import javax.persistence.EntityManagerFactory;
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.persistence.spi.PersistenceProvider;
 import javax.sql.DataSource;
-import java.sql.DriverManager;
 import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories
 @ComponentScan(value = "crud")
 
 public class HibernateConfig {
@@ -50,29 +36,26 @@ public class HibernateConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean getSessionFactory() {
+    public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(getDataSource());
-//        factoryBean.setPersistenceProviderClass((Class<? extends PersistenceProvider>) HibernatePersistenceProvider.class);
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        factoryBean.setPackagesToScan("ru.wertor.crud.model", "ru.wertor.crud.config", "ru.wertor.crud.dao");
+        factoryBean.setPersistenceProviderClass(org.hibernate.jpa.HibernatePersistenceProvider.class);
+        factoryBean.setPackagesToScan( "crud" );
         Properties prop = new Properties();
         prop.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
         prop.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
         prop.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        prop.put("spring.mvc.hiddenmethod.filter.enabled", env.getProperty("spring.mvc.hiddenmethod.filter.enabled"));
         factoryBean.setJpaProperties(prop);
+        factoryBean.afterPropertiesSet();
         return factoryBean;
     }
 
     @Bean
-    public PlatformTransactionManager getTransactionManager() {
+    public JpaTransactionManager getTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(getSessionFactory().getObject());
+        transactionManager.setEntityManagerFactory(getEntityManagerFactory().getObject());
         return transactionManager;
-    }
-
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
-        return new PersistenceExceptionTranslationPostProcessor();
     }
 }

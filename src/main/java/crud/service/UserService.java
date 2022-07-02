@@ -1,7 +1,6 @@
 package crud.service;
 
 import crud.model.User;
-
 import java.util.List;
 
 public interface UserService {
@@ -11,4 +10,8 @@ public interface UserService {
     List<User> showUsers();
 
     User getUserFromId(Long id);
+
+    void updateUser(User user, Long id);
+
+    void removeUser(Long id);
 }

@@ -2,10 +2,8 @@ package crud.model;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "users")
+@Table(name = "persons")
 public class User {
 
     @Id
@@ -21,16 +19,16 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
+    @Column(name = "age")
+    private int age;
 
     public User() {}
 
-    public User(String name, String fatherName, String lastName, LocalDate birthDate) {
+    public User(String name, String fatherName, String lastName, int age) {
         this.name = name;
         this.fatherName = fatherName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.age = age;
     }
 
     public Long getId() {
@@ -65,12 +63,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
+    public int getAge() {
+        return age;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     @Override
@@ -79,8 +77,7 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", fatherName='" + fatherName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDate=" + birthDate +
-                '}';
+                ", lastName='" + lastName +
+                ", age='" + age + '}';
     }
 }
